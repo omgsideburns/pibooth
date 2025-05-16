@@ -19,11 +19,12 @@
 
    See the included `CHANGELOG.md` for a full list of modifications.
 
-   Here's the booth I built. It's awesome.
-   .. image:: mybooth.png
-      :alt: My custom Raspberry Pi photo booth
-      :align: center
-      :width: 400px
+   Here's the booth I built. It's awesome. 
+
+.. image:: mybooth.png
+   :alt: My custom Raspberry Pi photo booth
+   :align: center
+   :width: 400px
 
 --------
 
