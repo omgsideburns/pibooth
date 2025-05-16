@@ -66,7 +66,7 @@ class RpiCamera(BaseCamera):
 
             image = self.build_overlay(size, str(text), alpha)
             self._overlay = self._cam.add_overlay(image.tobytes(), image.size, layer=3,
-                                                  window=tuple(rect), fullscreen=False)
+                                     window=tuple(rect), fullscreen=False, rotation=90)
 
     def _hide_overlay(self):
         """Remove any existing overlay.
@@ -83,7 +83,7 @@ class RpiCamera(BaseCamera):
         """
         # "Rewind" the stream to the beginning so we can read its content
         capture_data.seek(0)
-        return Image.open(capture_data)
+        return Image.open(capture_data).transpose(Image.ROTATE_270)
 
     def preview(self, window, flip=True):
         """Display a preview on the given Rect (flip if necessary).

@@ -40,7 +40,7 @@ def multiline_text_to_surfaces(text, color, rect, align='center'):
         elif align.endswith('center'):
             x = rect.centerx - surface.get_rect().width / 2
         elif align.endswith('right'):
-            x = rect.right - surface.get_rect().width
+            x = rect.right - surface.get_rect().width / 2
         else:
             raise ValueError("Invalid horizontal alignment '{}'".format(align))
 

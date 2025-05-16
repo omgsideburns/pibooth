@@ -71,7 +71,7 @@ class BaseCamera(object):
         if max_size:
             size = (min(size[0], max_size[0]), min(size[1], max_size[1]))
         res = sizing.new_size_keep_aspect_ratio(self.resolution, size)
-        return pygame.Rect(rect.centerx - res[0] // 2, rect.centery - res[1] // 2, res[0], res[1])
+        return pygame.Rect(rect.centery - res[0] // 2, rect.centerx - res[1] // 2, res[0], res[1])
 
     def build_overlay(self, size, text, alpha):
         """Return a PIL image with the given text that can be used
