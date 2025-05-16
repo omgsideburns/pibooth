@@ -2,7 +2,7 @@
 
    ⚠️ **This is a customized fork of `pibooth`**
 
-   This is NOT maintained. I am currently working on a new program to replace this since it is practically abandonware at this point, and needs so many changes to be brought up to current raspberry pi specs. 
+   This is NOT maintained. I am currently working on a new program to replace this since pibooth is practically abandonware at this point, and needs so many changes to be brought up to current raspberry pi specs. 
 
    This version includes changes made for personal use and custom setups, based on `v2.0.8`.
 
