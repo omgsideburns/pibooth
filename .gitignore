@@ -75,3 +75,5 @@ target/
 # pyenv
 .python-version
 
+# other shit
+.DS_Store

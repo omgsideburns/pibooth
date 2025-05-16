@@ -1,0 +1,132 @@
+diff --git a/pibooth/camera/base.py b/pibooth/camera/base.py
+index 6f76b3b..ec435c5 100644
+--- a/pibooth/camera/base.py
++++ b/pibooth/camera/base.py
+@@ -71,7 +71,7 @@ class BaseCamera(object):
+         if max_size:
+             size = (min(size[0], max_size[0]), min(size[1], max_size[1]))
+         res = sizing.new_size_keep_aspect_ratio(self.resolution, size)
+-        return pygame.Rect(rect.centerx - res[0] // 2, rect.centery - res[1] // 2, res[0], res[1])
++        return pygame.Rect(rect.centery - res[0] // 2, rect.centerx - res[1] // 2, res[0], res[1])
+ 
+     def build_overlay(self, size, text, alpha):
+         """Return a PIL image with the given text that can be used
+diff --git a/pibooth/camera/rpi.py b/pibooth/camera/rpi.py
+index a5fed70..5a69103 100644
+--- a/pibooth/camera/rpi.py
++++ b/pibooth/camera/rpi.py
+@@ -66,7 +66,7 @@ class RpiCamera(BaseCamera):
+ 
+             image = self.build_overlay(size, str(text), alpha)
+             self._overlay = self._cam.add_overlay(image.tobytes(), image.size, layer=3,
+-                                                  window=tuple(rect), fullscreen=False)
++                                     window=tuple(rect), fullscreen=False, rotation=90)
+ 
+     def _hide_overlay(self):
+         """Remove any existing overlay.
+@@ -83,7 +83,7 @@ class RpiCamera(BaseCamera):
+         """
+         # "Rewind" the stream to the beginning so we can read its content
+         capture_data.seek(0)
+-        return Image.open(capture_data)
++        return Image.open(capture_data).transpose(Image.ROTATE_270)
+ 
+     def preview(self, window, flip=True):
+         """Display a preview on the given Rect (flip if necessary).
+diff --git a/pibooth/language.py b/pibooth/language.py
+index bf83d31..3cfae18 100644
+--- a/pibooth/language.py
++++ b/pibooth/language.py
+@@ -191,22 +191,6 @@ DEFAULT = {
+         'finished': "Obrigado!",
+         'oops': "Oops, ocorreu um erro.",
+     },
+-    'se': {
+-        'intro': "Ta en bild",
+-        'intro_print': 'Eller så kan du\fortfarande\skriva ut den här bilden',
+-        'choose': "Välj layout",
+-        '1': "1 bild",
+-        '2': "2 bilder",
+-        '3': "3 bilder",
+-        '4': "4 bilder",
+-        'chosen': "Kör!",
+-        'smile': "Smile!",
+-        'processing': "Jobbar...",
+-        'print': "Skriv ut bilden!",
+-        'print_forget': "Glöm\den här\bilden",
+-        'finished': "Tack",
+-        'oops': "Oops, nånting blev fel",
+-    },    
+ }
+ 
+ 
+diff --git a/pibooth/scripts/diagnostic.py b/pibooth/scripts/diagnostic.py
+index edc2b39..566f890 100755
+--- a/pibooth/scripts/diagnostic.py
++++ b/pibooth/scripts/diagnostic.py
+@@ -164,7 +164,7 @@ def main():
+     for index, (name, addr) in enumerate(cameras_list):
+         write_log("{:02d} : addr-> {}  name-> {}".format(index, addr, name))
+ 
+-    write_log("Starting diagnostic of connected DSLR camera", True)
++    write_log("Stating diagnostic of connected DSLR camera", True)
+     camera = gp.Camera()
+     camera.init()
+ 
+diff --git a/pibooth/scripts/regenerate.py b/pibooth/scripts/regenerate.py
+index d942823..7d0d2e5 100644
+--- a/pibooth/scripts/regenerate.py
++++ b/pibooth/scripts/regenerate.py
+@@ -4,7 +4,6 @@
+ """
+ 
+ import os
+-import argparse
+ from os import path as osp
+ from datetime import datetime
+ 
+@@ -66,16 +65,9 @@ def regenerate_all_images(plugin_manager, config, basepath):
+ def main():
+     """Application entry point.
+     """
+-    parser = argparse.ArgumentParser(usage="%(prog)s [options]", description="This script lets you regenerate the final pictures from the original captures present in the raw directory.")
+-
+-    parser.add_argument("config_directory", nargs='?', default="~/.config/pibooth",
+-                        help=u"path to configuration directory (default: %(default)s)")
+-
+-    options = parser.parse_args()
+-
+     configure_logging()
+     plugin_manager = create_plugin_manager()
+-    config = PiConfigParser(osp.join(options.config_directory, "pibooth.cfg"), plugin_manager)
++    config = PiConfigParser("~/.config/pibooth/pibooth.cfg", plugin_manager)
+ 
+     # Register plugins
+     plugin_manager.load_all_plugins(config.gettuple('GENERAL', 'plugins', 'path'),
+diff --git a/pibooth/view/background.py b/pibooth/view/background.py
+index dc16aa7..6a88ede 100644
+--- a/pibooth/view/background.py
++++ b/pibooth/view/background.py
+@@ -40,7 +40,7 @@ def multiline_text_to_surfaces(text, color, rect, align='center'):
+         elif align.endswith('center'):
+             x = rect.centerx - surface.get_rect().width / 2
+         elif align.endswith('right'):
+-            x = rect.right - surface.get_rect().width
++            x = rect.right - surface.get_rect().width / 2
+         else:
+             raise ValueError("Invalid horizontal alignment '{}'".format(align))
+ 
+diff --git a/pibooth/view/window.py b/pibooth/view/window.py
+index b65359c..ddd769b 100644
+--- a/pibooth/view/window.py
++++ b/pibooth/view/window.py
+@@ -52,9 +52,6 @@ class PiWindow(object):
+             os.environ['SDL_VIDEO_CENTERED'] = '1'
+         pygame.init()
+ 
+-        # Release the soundcard as we are not using sounds
+-        pygame.mixer.quit()
+-
+         # Save the desktop mode, shall be done before `setmode` (SDL 1.2.10, and pygame 1.8.0)
+         info = pygame.display.Info()
+ 
