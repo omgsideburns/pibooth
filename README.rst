@@ -1,3 +1,29 @@
+.. IMPORTANT::
+
+   ⚠️ **This is a customized fork of `pibooth`**
+
+   This is NOT maintained. I am currently working on a new program to replace this since it is practically abandonware at this point, and needs so many changes to be brought up to current raspberry pi specs. 
+
+   This version includes changes made for personal use and custom setups, based on `v2.0.8`.
+
+   Includes adjustments for touchscreen usage, portrait mode display, and some theming.
+   This was one of the first python things I ever worked on so pardon my mess.  
+
+   The original project is available at: https://github.com/pibooth/pibooth
+
+   **My customizations include:**
+
+   - Fixed preview image orientation for portrait mode
+   - Adjusted layout template alignment
+   - Minor logging and performance tweaks
+
+   See the included `CHANGELOG.md` for a full list of modifications.
+
+.. image:: mybooth.png
+   :alt: My Booth Setup
+   :align: center
+   :width: 400px
+
 |Pibooth|
 
 |PythonVersions| |PypiPackage| |Downloads| |Tests| |Codecov|
