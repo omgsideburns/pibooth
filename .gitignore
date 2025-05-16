@@ -77,4 +77,5 @@ target/
 
 # other shit
 .DS_Store
-.DS_Store
+my_changes.diff
+changes.diff
